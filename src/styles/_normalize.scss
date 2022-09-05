@@ -1,0 +1,29 @@
+*,
+html,
+body,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+ul[class],
+ol[class] {
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+article > * + * {
+  margin-top: 16px;
+}

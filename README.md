@@ -5,6 +5,16 @@
 npm install
 ```
 
+
+### To get data
+```
+npm install -g json-server
+
+# Then you need to go to file directory cd public/data
+# Run the following command: json-server --watch mock-data.json
+Now you should get the data from fake api
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run dev
@@ -14,6 +24,3 @@ npm run dev
 ```
 npm run build
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
