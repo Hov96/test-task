@@ -1,14 +1,15 @@
 <template>
-  <div class="checkbox">
+  <label class="container"
+    >{{ label }}
     <input
       type="checkbox"
-      :name="id"
       :id="id"
       :value="value"
+      :checked="checked"
       @change="($event) => $emit('change', { id, checked: $event.target.checked })"
     />
-    <label :for="id">{{ label }}</label>
-  </div>
+    <span class="checkmark" :class="halfChecked ? 'checkmark-half' : ''"></span>
+  </label>
 </template>
 
 <script>
@@ -27,52 +28,96 @@ export default {
       type: String,
       default: "value",
     },
+    checked: {
+      type: Boolean,
+      default: false,
+    },
+    halfChecked: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
-.checkbox {
+.container {
   display: block;
-  margin-bottom: 15px;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   input {
-    padding: 0;
-    height: initial;
-    width: initial;
-    margin-bottom: 0;
-    display: none;
+    position: absolute;
+    opacity: 0;
     cursor: pointer;
-    &:checked + label:after {
-      content: "";
-      display: block;
-      position: absolute;
-      top: 2px;
+    height: 0;
+    width: 0;
+    & ~ .checkmark-half {
+      &:after {
+        display: block;
+        left: 8px;
+        top: 8px;
+        width: 10px;
+        height: 4px;
+        border: solid #2196f3;
+        border-width: 3px;
+        -webkit-transform: rotate(0);
+        -ms-transform: rotate(0);
+        transform: rotate(0);
+      }
+    }
+    &:checked {
+      & ~ .checkmark {
+        background-color: #2196f3;
+        &:after {
+          display: block;
+        }
+      }
+      &:hover {
+        & ~ .checkmark {
+          background-color: #2196f3;
+        }
+      }
+    }
+  }
+  &:hover {
+    input {
+      & ~ .checkmark {
+        background-color: #ccc;
+      }
+    }
+  }
+  .checkmark {
+    &:after {
       left: 9px;
-      width: 6px;
-      height: 14px;
-      border: solid #0079bf;
-      border-width: 0 2px 2px 0;
+      top: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
       transform: rotate(45deg);
     }
   }
-  label {
-    position: relative;
-    cursor: pointer;
-    &::before {
-      content: "";
-      -webkit-appearance: none;
-      background-color: transparent;
-      border: 2px solid #0079bf;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
-        inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
-      padding: 10px;
-      display: inline-block;
-      position: relative;
-      vertical-align: middle;
-      cursor: pointer;
-      margin-right: 5px;
-    }
+}
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  &:after {
+    content: "";
+    position: absolute;
+    display: none;
   }
 }
 </style>

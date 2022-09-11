@@ -3,25 +3,38 @@
     <span class="spinner"></span>
   </div>
   <div class="error" v-else-if="pageError">
-    Something went wrong. Please make sure you are running a fake API to get data
+    Something went wrong. Please make sure you are running a fake API to get data (README.md)
   </div>
   <div class="main" v-else>
-    <div class="main-flex">
+    <div class="main-flex" :key="count">
       <div v-for="item in data" :key="item.id">
-        <Checkbox
-          :id="item.id"
-          :label="item.label"
-          :value="item.id"
-          @change="(data) => handleChangeInput(data, item.id)"
-        />
-        <div class="main-childs">
+        <div class="main-flex__heading">
+          <Checkbox
+            :id="item.id"
+            :label="item.label"
+            :value="item.id"
+            :checked="item.checked"
+            :halfChecked="item.halfChecked || false"
+            @change="(data) => handleChangeInput(data, item.id, true)"
+          />
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Arrow-down.svg"
+            alt="Arrow down"
+            width="30"
+            height="24"
+            :class="{rotated: item.show}"
+            @click="item.show = !item.show; count++"
+          />
+        </div>
+        <div class="main-childs" v-show="item.show">
           <Checkbox
             v-for="el in item.children"
             :key="el.id"
             :id="el.id"
             :label="el.label"
             :value="el.id"
-            @change="(data) => handleChangeInput(data, item.id)"
+            :checked="el.checked"
+            @change="(data) => handleChangeInput(data, item.id, false)"
           />
         </div>
       </div>
@@ -41,11 +54,21 @@ import Checkbox from "../../components/Checkbox";
 export default {
   name: "MainPage",
   components: { Checkbox },
+  data() {
+    return {
+      count: 0,
+    };
+  },
   methods: {
     ...mapActions("moduleMainPage", ["fetchData"]),
-    ...mapMutations("moduleMainPage", ["setCheckcedItems"]),
-    handleChangeInput(data, category) {
-      this.setCheckcedItems({}); // TODO
+    ...mapMutations("moduleMainPage", ["setCheckedItems", "setHeading"]),
+    handleChangeInput(data, category, isHeading) {
+      if (isHeading) {
+        this.setHeading({ ...data, category });
+      } else {
+        this.setCheckedItems({ ...data, category });
+      }
+      this.count++;
     },
   },
   computed: {
@@ -68,6 +91,18 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 10px 0;
+    &__heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 200px;
+      img {
+        cursor: pointer;
+        &.rotated {
+          transform: rotate(180deg);
+        }
+      }
+    }
   }
   &-childs {
     margin-left: 32px;
@@ -79,6 +114,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 150px;
   }
 }
 
